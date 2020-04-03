@@ -1,0 +1,42 @@
+{
+  "name": "logbook",
+  "version": "0.0.1",
+  "description": "Register your care locations in a dedicated CMS-like application.",
+  "scripts": {
+    "clean": "pnpm recursive run cleanup",
+    "start": "pnpm recursive run dev",
+    "build:domain": "pnpm run build:domain",
+    "docker:build": "docker build -t logbook .",
+    "docker:tag": "docker tag logbook minvws/logbook",
+    "docker:publish": "docker push minvws/logbook",
+    "docker": "npm run docker:local && npm run docker:publish",
+    "docker:local": "npm run docker:build && npm run docker:tag",
+    "docker:run": "docker run --name lr -it -p 1234:3030 logbook",
+    "docker:sh": "docker run -it logbook sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikvullings/logbook.git"
+  },
+  "keywords": [
+    "SPA",
+    "mithril",
+    "log book",
+    "data acquisition",
+    "store",
+    "REST",
+    "database",
+    "lokijs",
+    "dynamic",
+    "forms"
+  ],
+  "author": "Erik Vullings <erik.vullings@gmail.com> (http://www.tno.nl)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/erikvullings/logbook/issues"
+  },
+  "homepage": "https://github.com/erikvullings/logbook#readme",
+  "devDependencies": {
+    "pnpm": "^4.12.4"
+  }
+}

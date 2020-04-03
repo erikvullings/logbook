@@ -1,0 +1,11 @@
+node_modules
+dist
+packages/common/node_modules
+packages/common/dist
+packages/common/pnpm*
+packages/app/node_modules
+packages/app/dist
+packages/app/.cache
+packages/app/pnpm*
+packages/server/node_modules
+packages/server/dist
