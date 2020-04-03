@@ -17,17 +17,17 @@ export const appStateMgmt = {
   },
   actions: (us: UpdateStream) => {
     return {
-      updateDatasources: (sources: IDatasource[]) => {
+      updateDatasources: (sources: IDatasource[], save = true) => {
         const state = us() as Partial<IAppModel>;
-        if (state) {
+        if (save && state) {
           const isNew = !state.app?.sources || state.app.sources.length === 0;
           appStateMgmt.effects.saveDatasources(sources, isNew);
         }
         return us({ app: { sources } });
       },
-      updateOrganisations: (organisations: IOrganisation[]) => {
+      updateOrganisations: (organisations: IOrganisation[], save = true) => {
         const state = us() as Partial<IAppModel>;
-        if (state) {
+        if (save && state) {
           const isNew = !state.app?.organisations || state.app.organisations.length === 0;
           appStateMgmt.effects.saveOrganisations(organisations, isNew);
         }
@@ -44,7 +44,7 @@ export const appStateMgmt = {
         return;
       }
       const { sources } = result;
-      actions.updateDatasources(sources);
+      actions.updateDatasources(sources, false);
     },
     loadOrganisations: async () => {
       console.log('Loading organisations');
@@ -53,7 +53,7 @@ export const appStateMgmt = {
         return;
       }
       const { organisations } = result;
-      actions.updateOrganisations(organisations);
+      actions.updateOrganisations(organisations, false);
     },
     saveDatasources: async (sources: IDatasource[], isNew: boolean) => {
       isNew
@@ -80,8 +80,8 @@ export interface IAppModel {
 
 export interface IActions {
   updateFilter: (filter?: string) => UpdateStream;
-  updateDatasources: (sources: IDatasource[]) => UpdateStream;
-  updateOrganisations: (organisations: IOrganisation[]) => UpdateStream;
+  updateDatasources: (sources: IDatasource[], save: boolean) => UpdateStream;
+  updateOrganisations: (organisations: IOrganisation[], save: boolean) => UpdateStream;
 }
 
 export type ModelUpdateFunction = Partial<IAppModel> | ((model: Partial<IAppModel>) => Partial<IAppModel>);

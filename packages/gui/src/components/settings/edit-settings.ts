@@ -82,10 +82,6 @@ const sourcesForm = (organisations?: IOrganisation[]) =>
 
 const organisationsForm = [
   {
-    type: 'md',
-    value: '##### Organisaties',
-  },
-  {
     id: 'organisations',
     label: 'Voeg een nieuwe organisatie toe',
     type: organisationForm,
@@ -166,7 +162,7 @@ export const EditSettings: FactoryComponent<{
                     m(LayoutForm, {
                       form: sourcesForm(organisations),
                       obj: app,
-                      onchange: _ => app.sources && actions.updateDatasources(app.sources),
+                      onchange: _ => app.sources && actions.updateDatasources(app.sources, true),
                     })
                   ),
                   m(
@@ -183,6 +179,7 @@ export const EditSettings: FactoryComponent<{
                   ),
                 ]
               : [
+                  m('h5', 'Organisaties'),
                   m(
                     '.row',
                     m(LayoutForm, {
@@ -190,7 +187,7 @@ export const EditSettings: FactoryComponent<{
                       obj: app,
                       onchange: _ => {
                         if (app.organisations) {
-                          actions.updateOrganisations(app.organisations);
+                          actions.updateOrganisations(app.organisations, true);
                         }
                       },
                     })
