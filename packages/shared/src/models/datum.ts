@@ -7,9 +7,9 @@ export interface IData extends ILokiObj {
   data: IDatum[];
 }
 
-export interface IDatum {
-  /** Timestamp of the datum, in UNIX Epoch time */
-  time: number;
+export interface IDatum extends ILokiObj {
+  /** Organidation ID */
+  org: string;
   /** Other data fields */
   [key: string]: any;
 }

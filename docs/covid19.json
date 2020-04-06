@@ -1,9 +1,214 @@
-[
-  {
-    "id": "name",
-    "label": "Naam",
-    "type": "text",
-    "required": true,
-    "className": "col m6"
-  }
-]
+  [
+    {
+      "type": "md",
+      "value": "##### Virus"
+    },
+    {
+      "id": "aantal_zieken",
+      "label": "Aantal zieken (a.g.v. COVID-19)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_ic",
+      "label": "Aantal op de IC (COVID-19)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_genezen",
+      "label": "Hoeveel patiënten zijn genezen?",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "type": "md",
+      "value": "##### Zorg"
+    },
+    {
+      "id": "aantal_ziekteverzuim",
+      "label": "Aantal ziekteverzuim/uitval in de zorg",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_wachtlijst",
+      "label": "Aantal patiënten op wachtlijst (niet-COVID-19)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_slots",
+      "label": "Test-capaciteit (beschikbare slots)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_bedden",
+      "label": "Uitwijkcapaciteit (beschikbare bedden)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_doden",
+      "label": "Aantal doden vanaf vorige melding (a.g.v. COVID-19)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_plekken_mortuaria",
+      "label": "Aantal plekken in mortuaria beschikbaar",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_dagen_opbaren",
+      "label": "Gemiddeld aantal dagen na overlijden tot begrafenis/crematie",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_begrafenissen",
+      "label": "Aantal begrafenissen (totaal)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_niet_gehoord",
+      "label": "Aantal niet-gehoorde patiënten",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "spoedritten",
+      "label": "Alle spoedritten binnen de wettelijke opkomsttijd?",
+      "type": "select",
+      "options": [
+        {
+          "id": "ja"
+        },
+        {
+          "id": "bijna niet"
+        },
+        {
+          "id": "nee"
+        }
+      ],
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "b_vervoer",
+      "label": "Kan al het aangevraagde B-vervoer nog uitgevoerd worden?",
+      "type": "select",
+      "options": [
+        {
+          "id": "ja"
+        },
+        {
+          "id": "bijna niet"
+        },
+        {
+          "id": "nee"
+        }
+      ],
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "type": "md",
+      "value": "##### OOV"
+    },
+    {
+      "id": "aantal_overtredingen_corona_maatregelen",
+      "label": "Aantal overtredingen van Corona maatregelen (bekeuringen)",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_overtredingen_corona_hoesten",
+      "label": "Aantal overtredingen Corona-hoesten/moedwillige besmetting",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_meldingen_huiselijk_geweld",
+      "label": "Meldingen huiselijk geweld",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_aangiftes_dig_criminaliteit",
+      "label": "Aantal aangiftes digitale criminaliteit",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_zelfdodingen",
+      "label": "Aantal zelfdodingen incl. pogingen",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "type": "md",
+      "value": "##### Economie"
+    },
+    {
+      "id": "aantal_faillissementen",
+      "label": "Aantal (aangevraagde) faillissementen",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_aanvragen_ww",
+      "label": "Aantal aanvragen WW",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    },
+    {
+      "id": "aantal_aanvragen_noodfonds",
+      "label": "Aantal aanvragen Noodfonds ondernemers",
+      "type": "number",
+      "min": 0,
+      "required": true,
+      "className": "col m6"
+    }
+  ]

@@ -67,7 +67,7 @@ export const HomePage: FactoryComponent<{
                       id: s.id,
                       title: s.name,
                       content: s.tags ? s.tags.join(', ') : undefined,
-                      href: dashboardSvc.route(Dashboards.EDIT, { id: s.id, org }),
+                      href: dashboardSvc.route(Dashboards.EDIT, { org, id: s.id }),
                     })),
                 })
               )

@@ -1,92 +1,141 @@
 import m, { FactoryComponent } from 'mithril';
+import { Collection, CollectionMode, FlatButton } from 'mithril-materialized';
 import { Form, LayoutForm } from 'mithril-ui-form';
-import { IData, IQuestionnaire } from '../../../../shared/src';
+import { IDatum } from '../../../../shared/dist/models/datum';
+import { IQuestionnaire } from '../../../../shared/src';
 import { AppState } from '../../models/app-state';
-import { crudServiceFactory } from '../../services/crud-service';
+import { crudServiceFactory, ICrudService } from '../../services/crud-service';
+import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
 import { IActions, IAppModel } from '../../services/meiosis';
+import { padLeft } from '../../utils';
 import { CircularSpinner } from '../ui/preloader';
 
+const formatDate = (t: number) => {
+  const date = new Date(t);
+  const pl = (n: number) => padLeft(n, '0');
+  return `${date.getFullYear()}-${pl(date.getMonth() + 1)}-${pl(date.getDate())} ${pl(date.getHours())}:${pl(
+    date.getMinutes()
+  )}`;
+};
+
+const maxEditTime = 24 * 3600000;
 export const EditForm: FactoryComponent<{
   state: IAppModel;
   actions: IActions;
 }> = () => {
   const state = {} as {
     id?: string;
-    source?: IQuestionnaire;
-    obj?: IData;
+    org?: string;
+    questionnaire?: IQuestionnaire;
+    data?: IDatum[];
+    datum?: IDatum;
+    service: ICrudService<IDatum>;
   };
-
-  // const onsubmit = async (actions: IActions, hazard: Partial<{ [key: string]: any }>) => {
-  //   // log('submitting...');
-  //   // actions.updateScenario(hazard.scenario);
-  // };
-
-  // const formChanged = (source: Partial<any>, isValid: boolean) => {
-  //   state.canPublish = isValid;
-  //   console.log(JSON.stringify(source, null, 2));
-  // };
 
   return {
     oninit: async ({ attrs: { state: appState } }) => {
       const {
-        app: { questionnaires: sources },
+        app: { questionnaires },
       } = appState;
       const id = (state.id = m.route.param('id'));
-      if (!id) {
-        return;
+      const org = (state.org = m.route.param('org'));
+      if (!id || !org) {
+        M.toast({ html: 'ID en/of organisatie is niet aangegeven.', classes: 'red' });
+        return m.route.set(dashboardSvc.route(Dashboards.HOME));
       }
-      state.source = sources?.filter(s => s.id === id).shift();
-      if (!state.source) {
-        return;
+      state.questionnaire = questionnaires?.filter(s => s.id === id).shift();
+      if (!state.questionnaire) {
+        M.toast({ html: 'De vragenlijst is onbekend.', classes: 'red' });
+        return m.route.set(dashboardSvc.route(Dashboards.HOME));
       }
-      // const result = (await crudService.loadAll(id)) as undefined | IData;
-      // if (result) {
-      //   state.obj = result;
-      //   m.redraw();
-      // }
+      state.service = crudServiceFactory<IDatum>(AppState.apiService, id);
+      const result = await state.service.loadAll(`view?props=$loki,meta,org&q={"org":"${org}"}`);
+      if (result) {
+        state.data = result;
+        m.redraw();
+      }
     },
-    view: ({ attrs: { actions } }) => {
-      const { id, source } = state;
-      if (!id || !source) {
+    view: ({ attrs: { state: appState } }) => {
+      const { organisations } = appState?.app;
+      const { id, org, questionnaire, datum, data, service } = state;
+      if (!id || !org || !questionnaire) {
         return m(CircularSpinner);
       }
-      const { obj = { id } as IData } = state;
-      state.obj = obj;
-      // console.log(data);
-      // console.log(JSON.parse(source.form));
+      const organisation = organisations?.filter(o => o.id === org).shift();
 
-      // const form = formGenerator();
-      // if (!loaded) {
-      //   return m(CircularSpinner, { className: 'center-align', style: 'margin-top: 20%;' });
-      // }
-      const form = [
-        { id: 'id', label: 'ID', disabled: true },
-        {
-          id: 'data',
-          label: 'Add new data',
-          type: JSON.parse(source.form),
-          repeat: true,
-          pageSize: 1,
-          // propertyFilter: 'name',
-          // filterLabel: 'Filter by name',
-        },
-      ] as Form;
+      const now = Date.now();
+      const readonly = !datum || (datum.meta && datum.meta.created ? now - datum.meta.created > maxEditTime : false);
+      const form = JSON.parse(questionnaire.form) as Form;
+      form.unshift({
+        type: 'md',
+        value: `#### ${questionnaire.name} vragen voor ${organisation?.name}${
+          datum && datum.meta ? ` (${formatDate(datum.meta.updated || datum.meta.created)})` : ''
+        }`,
+      });
 
-      return m(
-        '.row',
-        m(LayoutForm, {
-          form,
-          obj,
-          onchange: async _ => {
-            console.log(obj);
-            // const result = await crudService.save(id, data);
-            // if (result) {
-            //   state.data = result;
-            //   m.redraw();
-            // }
+      return m('.row', [
+        m(
+          'ul#slide-out.sidenav.sidenav-fixed',
+          {
+            style: `height: ${window.innerHeight - 30}px`,
+            oncreate: ({ dom }) => {
+              M.Sidenav.init(dom);
+            },
           },
-        })
-      );
+          [
+            m(FlatButton, {
+              label: 'Meting toevoegen',
+              iconName: 'add',
+              class: 'col s11 indigo darken-4 white-text',
+              onclick: () => (state.datum = { org } as IDatum),
+            }),
+            data &&
+              data.map(d =>
+                m(
+                  'li',
+                  m(
+                    'a',
+                    {
+                      onclick: async () => {
+                        const res = await service?.load(d.$loki);
+                        state.datum = res;
+                        m.redraw();
+                      },
+                    },
+                    formatDate(d.meta?.created)
+                  )
+                )
+              ),
+          ]
+        ),
+        m(
+          '.contentarea',
+          datum
+            ? [
+                m(
+                  '.row',
+                  m(LayoutForm, {
+                    form,
+                    obj: datum,
+                    readonly,
+                    onchange: async _ => {
+                      console.log(datum);
+                    },
+                  })
+                ),
+                !readonly &&
+                  m(
+                    '.row',
+                    m(FlatButton, {
+                      label: 'Opslaan',
+                      iconName: 'save',
+                      onclick: () => service.save(datum),
+                    })
+                  ),
+              ]
+            : m('p', 'Selecteer een meting uit de lijst in het menu of maak een nieuwe aan.')
+        ),
+      ]);
     },
   };
 };

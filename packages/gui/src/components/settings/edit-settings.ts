@@ -123,7 +123,6 @@ export const EditSettings: FactoryComponent<{
           ? questionnaires[questionnairesIndex]
           : undefined;
       const json = questionnaire && questionnaire.form ? JSON.parse(questionnaire.form) : undefined;
-      const parsed = JSON.stringify(json, null, 2);
 
       // const orgIndex = m.route.param('organisations') ? +m.route.param('organisations') - 1 : 0;
 
@@ -177,9 +176,7 @@ export const EditSettings: FactoryComponent<{
                     '.row',
                     json && [
                       m('h5', 'Voorbeeld van de vragenlijst'),
-                      m('pre.col.md6', parsed),
                       m(LayoutForm, {
-                        class: 'col md6',
                         form: json,
                         obj: {},
                       }),
