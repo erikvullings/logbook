@@ -101,7 +101,7 @@ export const Auth = {
   /** Match a role with one of the user's role. Returns true when a match is found. */
   matchRoles(roles: string[]) {
     return (Auth.roles || []).some(r => roles.indexOf(r) >= 0);
-  }
+  },
   setAuthenticated(authN: boolean) {
     Auth.isAuthenticated = authN;
   },
