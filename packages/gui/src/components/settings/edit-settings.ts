@@ -2,19 +2,19 @@ import m, { FactoryComponent } from 'mithril';
 import { Form, LayoutForm } from 'mithril-ui-form';
 import { IOrganisation } from '../../../../shared/src';
 import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
+import { Auth } from '../../services/login-service';
 import { IActions, IAppModel } from '../../services/meiosis';
 import { CircularSpinner } from '../ui/preloader';
 
-const sourceForm = (organisations?: IOrganisation[]) =>
+const questionnaireForm = (organisations?: IOrganisation[]) =>
   [
     {
       id: 'id',
       label: 'ID',
       type: 'text',
-      description: 'Afkorting van de organisatie',
-      // autogenerate: 'id',
+      autogenerate: 'guid',
       required: true,
-      // disabled: true,
+      disabled: true,
       className: 'col m6',
     },
     {
@@ -64,16 +64,16 @@ const organisationForm = [
   },
 ] as Form;
 
-const sourcesForm = (organisations?: IOrganisation[]) =>
+const questionnairesForm = (organisations?: IOrganisation[]) =>
   [
     {
       type: 'md',
       value: '##### Vragenlijst definities',
     },
     {
-      id: 'sources',
+      id: 'questionnaires',
       label: 'Voeg een nieuwe vragenlijst toe',
-      type: sourceForm(organisations),
+      type: questionnaireForm(organisations),
       repeat: true,
       pageSize: 1,
       propertyFilter: 'name',
@@ -102,20 +102,27 @@ export const EditSettings: FactoryComponent<{
   state: IAppModel;
   actions: IActions;
 }> = () => {
-  const sourcesRegex = /sources=(\d+)/gi;
+  const questionnairesRegex = /questionnaires=(\d+)/gi;
+
   return {
     view: ({ attrs: { state, actions } }) => {
+      if (!Auth.isAdmin()) {
+        return m.route.set(Dashboards.HOME);
+      }
       const { app } = state;
       if (!app) {
         return m(CircularSpinner);
       }
-      const { sources, organisations } = app;
+      const { questionnaires: questionnaires, organisations } = app;
       const showQuestionnaire = m.route.param('content') === Settings.ORGANISATION ? false : true;
       const route = m.route.get();
-      const match = sourcesRegex.exec(route);
-      const sourcesIndex = match && match.length >= 1 ? +match[1] - 1 : 0;
-      const source = sources && sourcesIndex <= sources.length ? sources[sourcesIndex] : undefined;
-      const json = source && source.form ? JSON.parse(source.form) : undefined;
+      const match = questionnairesRegex.exec(route);
+      const questionnairesIndex = match && match.length >= 1 ? +match[1] - 1 : 0;
+      const questionnaire =
+        questionnaires && questionnairesIndex <= questionnaires.length
+          ? questionnaires[questionnairesIndex]
+          : undefined;
+      const json = questionnaire && questionnaire.form ? JSON.parse(questionnaire.form) : undefined;
       const parsed = JSON.stringify(json, null, 2);
 
       // const orgIndex = m.route.param('organisations') ? +m.route.param('organisations') - 1 : 0;
@@ -161,9 +168,9 @@ export const EditSettings: FactoryComponent<{
                   m(
                     '.row',
                     m(LayoutForm, {
-                      form: sourcesForm(organisations),
+                      form: questionnairesForm(organisations),
                       obj: app,
-                      onchange: _ => app.sources && actions.updateDatasources(app.sources, true),
+                      onchange: _ => app.questionnaires && actions.updateQuestionnaires(app.questionnaires, true),
                     })
                   ),
                   m(

@@ -1,8 +1,8 @@
 import m from 'mithril';
 import { ILokiObj } from '../../../shared/src';
 
-export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string) => {
-  const load = async (fragment: string, id: number | string = 1): Promise<T | undefined> => {
+export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string, fragment: string) => {
+  const load = async (id: number | string = 1): Promise<T | undefined> => {
     const url = `${baseUrl}/${fragment}/${id}`;
     const result = await m
       .request<T>({
@@ -16,7 +16,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string)
     return result;
   };
 
-  const loadAll = async (fragment: string): Promise<T[] | undefined> => {
+  const loadAll = async (): Promise<T[] | undefined> => {
     const url = `${baseUrl}/${fragment}`;
     return await m.request<T[]>({
       method: 'GET',
@@ -24,7 +24,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string)
     });
   };
 
-  const create = async (fragment: string, item: T, fd?: FormData) => {
+  const create = async (item: T, fd?: FormData) => {
     const url = `${baseUrl}/${fragment}`;
     const result = await m
       .request<T>({
@@ -36,7 +36,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string)
     return result;
   };
 
-  const update = async (fragment: string, item: T, fd?: FormData) => {
+  const update = async (item: T, fd?: FormData) => {
     const url = `${baseUrl}/${fragment}/${item.$loki}`;
     const result = await m
       .request<T>({
@@ -48,7 +48,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string)
     return result;
   };
 
-  const deleteItem = async (fragment: string, id: string | number) => {
+  const deleteItem = async (id: string | number) => {
     const url = `${baseUrl}/${fragment}/${id}`;
     await m.request({
       method: 'DELETE',
@@ -62,8 +62,8 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string)
     create,
     update,
     delete: deleteItem,
-    save: (fragment: string, item: T, fd?: FormData) => {
-      return item.$loki ? update(fragment, item, fd) : create(fragment, item, fd);
+    save: (item: T, fd?: FormData) => {
+      return item.$loki ? update(item, fd) : create(item, fd);
     },
   };
 };

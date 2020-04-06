@@ -1,0 +1,9 @@
+[
+  {
+    "id": "name",
+    "label": "Naam",
+    "type": "text",
+    "required": true,
+    "className": "col m6"
+  }
+]

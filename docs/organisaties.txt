@@ -6,23 +6,24 @@ VRFL VR Flevoland
 VRFR VR Friesland
 VRGM VR Gelderland-Midden
 VRGZ VR Gelderland-Zuid
-VRGV VR Gooi_en_Vechtstreek
+VRGV VR Gooi en Vechtstreek
 VRG VR Groningen
 VRH VR Haaglanden
-VRHM VR Hollands_Midden
+VRHM VR Hollands Midden
 VRIJ VR IJsselland
 VRK VR Kennemerland
 VRLN VR Limburg-Noord
-VRMWB VR Midden-_en_West-Brabant
-VRNOG VR Noord-_en_Oost-Gelderland
-VRNHN VR Noord-Holland_Noord
+VRMWB VR Midden- en West-Brabant
+VRNOG VR Noord- en Oost-Gelderland
+VRNHN VR Noord-Holland Noord
 VRRR VR Rotterdam-Rijnmond
 VRT VR Twente
 VRU VR Utrecht
 VRZW VR Zaanstreek-Waterland
 VRZ VR Zeeland
-VRZHZ VR Zuid-Holland_Zuid
+VRZHZ VR Zuid-Holland Zuid
 VRZL VR Zuid-Limburg
 LOCC Landelijk Operationeel Crisis Center
 LIMC Landelijk Informatie Management Center
+LOTC Landelijk Operationeel Team Corona
 TENNET TENNET

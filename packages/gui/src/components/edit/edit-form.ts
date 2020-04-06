@@ -1,12 +1,10 @@
 import m, { FactoryComponent } from 'mithril';
 import { Form, LayoutForm } from 'mithril-ui-form';
-import { IData, IDatasource } from '../../../../shared/src';
+import { IData, IQuestionnaire } from '../../../../shared/src';
 import { AppState } from '../../models/app-state';
 import { crudServiceFactory } from '../../services/crud-service';
 import { IActions, IAppModel } from '../../services/meiosis';
 import { CircularSpinner } from '../ui/preloader';
-
-const crudService = crudServiceFactory<IData>(AppState.apiService);
 
 export const EditForm: FactoryComponent<{
   state: IAppModel;
@@ -14,7 +12,7 @@ export const EditForm: FactoryComponent<{
 }> = () => {
   const state = {} as {
     id?: string;
-    source?: IDatasource;
+    source?: IQuestionnaire;
     obj?: IData;
   };
 
@@ -31,7 +29,7 @@ export const EditForm: FactoryComponent<{
   return {
     oninit: async ({ attrs: { state: appState } }) => {
       const {
-        app: { sources },
+        app: { questionnaires: sources },
       } = appState;
       const id = (state.id = m.route.param('id'));
       if (!id) {
@@ -41,11 +39,11 @@ export const EditForm: FactoryComponent<{
       if (!state.source) {
         return;
       }
-      const result = (await crudService.loadAll(id)) as undefined | IData;
-      if (result) {
-        state.obj = result;
-        m.redraw();
-      }
+      // const result = (await crudService.loadAll(id)) as undefined | IData;
+      // if (result) {
+      //   state.obj = result;
+      //   m.redraw();
+      // }
     },
     view: ({ attrs: { actions } }) => {
       const { id, source } = state;
