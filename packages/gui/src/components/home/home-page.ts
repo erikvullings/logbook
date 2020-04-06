@@ -1,8 +1,8 @@
 import m, { FactoryComponent } from 'mithril';
 import { Collection, CollectionMode, TextInput } from 'mithril-materialized';
+import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
 import { IActions, IAppModel } from '../../services/meiosis';
 import { CircularSpinner } from '../ui/preloader';
-import { dashboardSvc, Dashboards } from '../../services/dashboard-service';
 
 export const HomePage: FactoryComponent<{
   state: IAppModel;
@@ -16,7 +16,7 @@ export const HomePage: FactoryComponent<{
       if (!sources) {
         return m(CircularSpinner);
       }
-      console.log(filter);
+
       return m('.row', [
         m(
           'ul#slide-out.sidenav.sidenav-fixed',
@@ -28,7 +28,7 @@ export const HomePage: FactoryComponent<{
           },
           [
             m(TextInput, {
-              label: 'Filter datasources',
+              label: 'Filter vragenlijsten',
               initialValue: filter,
               iconName: 'filter_list',
               onchange: v => actions.updateFilter(v),
@@ -43,7 +43,7 @@ export const HomePage: FactoryComponent<{
             '.row',
             m(Collection, {
               mode: CollectionMode.AVATAR,
-              header: 'Datasources',
+              header: 'Vragenlijsten',
               items: sources
                 .filter(
                   s =>

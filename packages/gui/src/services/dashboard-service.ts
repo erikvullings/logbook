@@ -6,11 +6,13 @@ import { Layout } from '../components/layout';
 import { EditSettings } from '../components/settings/edit-settings';
 import { IDashboard } from '../models/dashboard';
 import { actions, states } from './';
+import { Auth, Login } from './login-service';
 
 export const enum Dashboards {
   LANDING = 'LANDING',
   HOME = 'HOME',
   EDIT = 'EDIT',
+  USER = 'USER',
   SETTINGS = 'SETTINGS',
 }
 
@@ -24,7 +26,7 @@ class DashboardService {
   }
 
   public getList() {
-    return this.dashboards;
+    return this.dashboards.filter(d => !d.forRoles || d.forRoles.length === 0 || Auth.matchRoles(d.forRoles));
   }
 
   public setList(list: IDashboard[]) {
@@ -107,6 +109,15 @@ export const dashboardSvc: DashboardService = new DashboardService(Layout, [
     icon: 'settings',
     route: '/settings',
     visible: true,
+    forRoles: ['admin'],
     component: EditSettings,
+  },
+  {
+    id: Dashboards.USER,
+    title: 'User page',
+    route: '/user',
+    icon: () => (Auth.isAuthenticated ? 'person' : 'person_outline'),
+    visible: true,
+    component: Login,
   },
 ]);

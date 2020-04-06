@@ -4,6 +4,7 @@ import { SlimdownView } from 'mithril-ui-form';
 import background from '../../assets/background.png';
 import logo from '../../assets/logbook.svg';
 import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
+import { Auth } from '../../services/login-service';
 
 export const LandingPage = () => ({
   view: () => [
@@ -24,12 +25,19 @@ export const LandingPage = () => ({
             style: 'position: relative; top: 240px;',
           },
           [
-            m(Button, {
-              className: 'btn-large',
-              label: 'START',
-              iconName: 'play_arrow',
-              onclick: () => dashboardSvc.switchTo(Dashboards.HOME),
-            }),
+            Auth.isAuthenticated
+              ? m(Button, {
+                  className: 'btn-large',
+                  label: 'START',
+                  iconName: 'play_arrow',
+                  onclick: () => dashboardSvc.switchTo(Dashboards.HOME),
+                })
+              : m(Button, {
+                  className: 'btn-large',
+                  label: 'LOGIN',
+                  iconName: 'person_outline',
+                  onclick: () => dashboardSvc.switchTo(Dashboards.USER),
+                }),
           ]
         )
       ),

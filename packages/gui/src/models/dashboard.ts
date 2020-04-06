@@ -13,5 +13,7 @@ export interface IDashboard {
   icon?: IconOrResolver;
   route: string;
   visible: boolean;
+  /** Roles that can access this dashboard */
+  forRoles?: string[];
   component: ComponentTypes<any, any>;
 }

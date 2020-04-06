@@ -11,9 +11,10 @@ const sourceForm = (organisations?: IOrganisation[]) =>
       id: 'id',
       label: 'ID',
       type: 'text',
-      autogenerate: 'id',
+      description: 'Afkorting van de organisatie',
+      // autogenerate: 'id',
       required: true,
-      disabled: true,
+      // disabled: true,
       className: 'col m6',
     },
     {
