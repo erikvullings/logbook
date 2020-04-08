@@ -1,11 +1,10 @@
 import Stream from 'mithril/stream';
-import { IOrganisation, IOrganisationsEntity, IQuestionnaire, IQuestionnaireEntity } from '../../../shared/src';
-import { AppState } from '../models/app-state';
+import { IOrganisation, IQuestionnaire } from '../../../shared/src';
+import { AppState, IAppSettings } from '../models';
 import { merge } from '../utils/mergerino';
 import { crudServiceFactory } from './crud-service';
 
-const organisationsService = crudServiceFactory<IOrganisationsEntity>(AppState.apiService, 'organisations');
-const questionnaireService = crudServiceFactory<IQuestionnaireEntity>(AppState.apiService, 'questionnaires');
+const settingsService = crudServiceFactory<IAppSettings>(AppState.apiService, 'settings');
 
 /** Application state */
 export const appStateMgmt = {
@@ -14,73 +13,45 @@ export const appStateMgmt = {
       filter: '',
       questionnaires: [] as IQuestionnaire[],
       organisations: [] as IOrganisation[],
+      settings: {} as IAppSettings,
     },
   },
   actions: (us: UpdateStream) => {
     return {
-      updateQuestionnaires: (questionnaires: IQuestionnaire[], save = true) => {
-        const state = us() as Partial<IAppModel>;
-        if (save && state) {
-          const isNew = !state.app?.questionnaires || state.app.questionnaires.length === 0;
-          appStateMgmt.effects.saveQuestionnaires(questionnaires, isNew);
-        }
-        return us({ app: { questionnaires } });
+      updateSettings: async (appSettings: IAppSettings, save = true) => {
+        const settings = save ? await appStateMgmt.effects.saveSettings(appSettings) : appSettings;
+        return settings && us({ app: { settings } } as Partial<IAppModel>);
       },
-      updateOrganisations: (organisations: IOrganisation[], save = true) => {
-        const state = us() as Partial<IAppModel>;
-        if (save && state) {
-          const isNew = !state.app?.organisations || state.app.organisations.length === 0;
-          appStateMgmt.effects.saveOrganisations(organisations, isNew);
-        }
-        return us({ app: { organisations } });
-      },
-      updateFilter: (filter?: string) => us({ app: { filter } }),
+      updateFilter: (filter = '') => us({ app: { filter } } as Partial<IAppModel>),
     } as IActions;
   },
   effects: {
-    loadQuestionnaires: async () => {
-      console.log('Loading questionnaires');
-      const result = await questionnaireService.load();
-      if (!result) {
+    loadSettings: async () => {
+      console.log('Loading settings');
+      const settings = await settingsService.load();
+      if (!settings) {
         return;
       }
-      const { questionnaires } = result;
-      actions.updateQuestionnaires(questionnaires, false);
+      actions.updateSettings(settings, false);
     },
-    saveQuestionnaires: async (questionnaires: IQuestionnaire[], isNew: boolean) => {
-      isNew
-        ? await questionnaireService.create({ questionnaires } as IQuestionnaireEntity)
-        : await questionnaireService.update({ $loki: 1, questionnaires } as IQuestionnaireEntity);
-    },
-    loadOrganisations: async () => {
-      console.log('Loading organisations');
-      const result = (await organisationsService.load()) as any;
-      if (!result) {
-        return;
-      }
-      const { organisations } = result;
-      actions.updateOrganisations(organisations, false);
-    },
-    saveOrganisations: async (organisations: IOrganisation[], isNew: boolean) => {
-      isNew
-        ? await organisationsService.create({ organisations } as IOrganisationsEntity)
-        : await organisationsService.update({ $loki: 1, organisations } as IOrganisationsEntity);
+    saveSettings: async (settings: IAppSettings) => {
+      return await settingsService.save(settings);
     },
   },
 };
 
 export interface IAppModel {
-  app: Partial<{
+  app: {
     filter: string;
     questionnaires: IQuestionnaire[];
     organisations: IOrganisation[];
-  }>;
+    settings: IAppSettings;
+  };
 }
 
 export interface IActions {
   updateFilter: (filter?: string) => UpdateStream;
-  updateQuestionnaires: (questionnaires: IQuestionnaire[], save: boolean) => UpdateStream;
-  updateOrganisations: (organisations: IOrganisation[], save: boolean) => UpdateStream;
+  updateSettings: (appSettings: IAppSettings, save: boolean) => Promise<UpdateStream>;
 }
 
 export type ModelUpdateFunction = Partial<IAppModel> | ((model: Partial<IAppModel>) => Partial<IAppModel>);
@@ -91,9 +62,8 @@ const app = {
   actions: (us: UpdateStream) => Object.assign({}, appStateMgmt.actions(us)) as IActions,
 };
 
-const update = Stream<ModelUpdateFunction>();
+const update = Stream<ModelUpdateFunction>() as UpdateStream;
 export const states = Stream.scan(merge, app.initial, update);
 export const actions = app.actions(update);
 
-appStateMgmt.effects.loadQuestionnaires();
-appStateMgmt.effects.loadOrganisations();
+appStateMgmt.effects.loadSettings();

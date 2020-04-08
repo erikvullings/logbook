@@ -1,5 +1,3 @@
-import { Feature } from 'geojson';
-
 /**
  * Create a GUID
  * @see https://stackoverflow.com/a/2117523/319711

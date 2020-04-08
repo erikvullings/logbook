@@ -1,9 +1,3 @@
-import { ILokiObj } from './loki-obj';
-
-export interface IQuestionnaireEntity extends ILokiObj {
-  questionnaires: IQuestionnaire[];
-}
-
 export interface IQuestionnaire {
   /** Unique ID */
   id: string;

@@ -84,9 +84,10 @@ export const EditForm: FactoryComponent<{
           },
           [
             m(FlatButton, {
-              label: 'Meting toevoegen',
+              label: 'Rapportage toevoegen',
               iconName: 'add',
               class: 'col s11 indigo darken-4 white-text',
+              style: 'margin: 10px  ;',
               onclick: () => (state.datum = { org } as IDatum),
             }),
             data &&

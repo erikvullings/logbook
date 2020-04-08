@@ -5,6 +5,7 @@ import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
 import { Auth } from '../../services/login-service';
 import { IActions, IAppModel } from '../../services/meiosis';
 import { CircularSpinner } from '../ui/preloader';
+import { SecurityMode } from '../../models';
 
 const questionnaireForm = (organisations?: IOrganisation[]) =>
   [
@@ -93,10 +94,30 @@ const organisationsForm = [
   },
 ] as Form;
 
+const securityForm = [
+  {
+    id: 'security',
+    label: '##### Beveiliging',
+    type: [
+      {
+        id: 'mode',
+        label: 'Mode',
+        type: 'select',
+        options: Object.keys(SecurityMode).map(k => ({ id: k })),
+        required: true,
+        className: 'col m6',
+      },
+    ],
+  },
+] as Form;
+
 enum Settings {
   ORGANISATION = 'ORGANISATION',
   QUESTIONNAIRES = 'QUESTIONNAIRES',
+  SECURITY = 'SECURITY',
 }
+
+const contentLink = (page: Settings) => `${dashboardSvc.route(Dashboards.SETTINGS)}?content=${page}`;
 
 export const EditSettings: FactoryComponent<{
   state: IAppModel;
@@ -114,7 +135,7 @@ export const EditSettings: FactoryComponent<{
         return m(CircularSpinner);
       }
       const { questionnaires: questionnaires, organisations } = app;
-      const showQuestionnaire = m.route.param('content') === Settings.ORGANISATION ? false : true;
+      const showPage = m.route.param('content');
       const route = m.route.get();
       const match = questionnairesRegex.exec(route);
       const questionnairesIndex = match && match.length >= 1 ? +match[1] - 1 : 0;
@@ -124,9 +145,9 @@ export const EditSettings: FactoryComponent<{
           : undefined;
       const json = questionnaire && questionnaire.form ? JSON.parse(questionnaire.form) : undefined;
 
-      // const orgIndex = m.route.param('organisations') ? +m.route.param('organisations') - 1 : 0;
+      const onchange = () => app.settings && actions.updateSettings(app.settings, true);
+      const obj = app.settings;
 
-      // console.log(app);
       return m('.row', [
         m(
           'ul#slide-out.sidenav.sidenav-fixed',
@@ -142,7 +163,7 @@ export const EditSettings: FactoryComponent<{
               m(
                 m.route.Link,
                 {
-                  href: dashboardSvc.route(Dashboards.SETTINGS) + `?content=${Settings.ORGANISATION}`,
+                  href: contentLink(Settings.ORGANISATION),
                 },
                 [m('i.material-icons', 'people'), 'Organisaties']
               )
@@ -152,9 +173,19 @@ export const EditSettings: FactoryComponent<{
               m(
                 m.route.Link,
                 {
-                  href: dashboardSvc.route(Dashboards.SETTINGS) + `?content=${Settings.QUESTIONNAIRES}`,
+                  href: contentLink(Settings.QUESTIONNAIRES),
                 },
                 [m('i.material-icons', 'assessment'), 'Vragenlijsten']
+              )
+            ),
+            m(
+              'li',
+              m(
+                m.route.Link,
+                {
+                  href: contentLink(Settings.SECURITY),
+                },
+                [m('i.material-icons', 'security'), 'Beveiliging']
               )
             ),
           ]
@@ -162,14 +193,14 @@ export const EditSettings: FactoryComponent<{
         m('.contentarea', [
           m(
             '.row',
-            showQuestionnaire
+            showPage === Settings.QUESTIONNAIRES
               ? [
                   m(
                     '.row',
                     m(LayoutForm, {
                       form: questionnairesForm(organisations),
-                      obj: app,
-                      onchange: _ => app.questionnaires && actions.updateQuestionnaires(app.questionnaires, true),
+                      obj,
+                      onchange,
                     })
                   ),
                   m(
@@ -183,18 +214,25 @@ export const EditSettings: FactoryComponent<{
                     ]
                   ),
                 ]
-              : [
+              : showPage === Settings.ORGANISATION
+              ? [
                   m('h5', 'Organisaties'),
                   m(
                     '.row',
                     m(LayoutForm, {
                       form: organisationsForm,
-                      obj: app,
-                      onchange: _ => {
-                        if (app.organisations) {
-                          actions.updateOrganisations(app.organisations, true);
-                        }
-                      },
+                      obj,
+                      onchange,
+                    })
+                  ),
+                ]
+              : [
+                  m(
+                    '.row',
+                    m(LayoutForm, {
+                      form: securityForm,
+                      obj,
+                      onchange,
                     })
                   ),
                 ]
