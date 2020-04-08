@@ -35,7 +35,9 @@ export const EditForm: FactoryComponent<{
   return {
     oninit: async ({ attrs: { state: appState } }) => {
       const {
-        app: { questionnaires },
+        app: {
+          settings: { questionnaires },
+        },
       } = appState;
       const id = (state.id = m.route.param('id'));
       const org = (state.org = m.route.param('org'));
@@ -56,7 +58,11 @@ export const EditForm: FactoryComponent<{
       }
     },
     view: ({ attrs: { state: appState } }) => {
-      const { organisations } = appState?.app;
+      const {
+        app: {
+          settings: { organisations },
+        },
+      } = appState;
       const { id, org, questionnaire, datum, data, service } = state;
       if (!id || !org || !questionnaire) {
         return m(CircularSpinner);

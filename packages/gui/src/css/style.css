@@ -97,9 +97,6 @@ a,
   margin-top: 0.2em;
   background: white;
 }
-.sidenav {
-  top: 66px;
-}
 .buttons a {
   margin: 5px 0;
 }
@@ -107,17 +104,17 @@ a,
   padding: 0 20px;
 }
 .contentarea {
-  padding-left: 150px;
+  padding: 20px;
 }
 #search:not(:focus) {
   color: white;
 }
 
-@media only screen and (max-width: 992px) {
+/* @media only screen and (max-width: 992px) {
   .contentarea {
-    padding-left: 0;
+    padding: 0;
   }
-}
+} */
 
 /* print styles */
 @media print {
@@ -141,6 +138,9 @@ a,
     page-break-before: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
     page-break-after: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
     page-break-inside: avoid; /* or 'auto' */
+  }
+  main {
+    padding-left: 300px;
   }
   main::after {
     content: 'Copyright DRIVER+';

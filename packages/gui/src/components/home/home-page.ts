@@ -11,9 +11,12 @@ export const HomePage: FactoryComponent<{
   actions: IActions;
 }> = () => {
   return {
-    view: ({ attrs: { state, actions } }) => {
+    view: ({ attrs: { state } }) => {
       const {
-        app: { questionnaires, organisations, filter },
+        app: {
+          settings: { questionnaires, organisations },
+          filter,
+        },
       } = state;
       if (!questionnaires) {
         return m(CircularSpinner);
@@ -26,26 +29,6 @@ export const HomePage: FactoryComponent<{
       }, {} as { [role: string]: IQuestionnaire[] });
       // questionnaires.filter(s => Auth.matchRoles(s.organisations));
       return m('.row', [
-        m(
-          'ul#slide-out.sidenav.sidenav-fixed',
-          {
-            style: `height: ${window.innerHeight - 30}px`,
-            oncreate: ({ dom }) => {
-              M.Sidenav.init(dom);
-            },
-          },
-          [
-            m(TextInput, {
-              label: 'Filter vragenlijsten',
-              initialValue: filter,
-              iconName: 'filter_list',
-              onchange: v => actions.updateFilter(v),
-              onkeyup: (_: KeyboardEvent, v?: string) => {
-                actions.updateFilter(v);
-              },
-            }),
-          ]
-        ),
         m('.contentarea', [
           Object.keys(org2questionnaire)
             .filter(org => org2questionnaire[org].length > 0)

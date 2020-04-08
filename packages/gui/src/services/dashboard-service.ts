@@ -3,7 +3,7 @@ import { EditForm } from '../components/edit/edit-form';
 import { HomePage } from '../components/home/home-page';
 import { LandingPage } from '../components/landing/landing-page';
 import { Layout } from '../components/layout';
-import { EditSettings } from '../components/settings/edit-settings';
+import { EditOrganisation, EditQuestionnaire, EditSecurity } from '../components/settings';
 import { IDashboard } from '../models/dashboard';
 import { actions, states } from './';
 import { Auth, Login } from './login-service';
@@ -13,7 +13,9 @@ export const enum Dashboards {
   HOME = 'HOME',
   EDIT = 'EDIT',
   USER = 'USER',
-  SETTINGS = 'SETTINGS',
+  SETTINGS_ORGANISATIONS = 'SETTINGS_ORGANISATIONS',
+  SETTINGS_QUESTIONNAIRES = 'SETTINGS_QUESTIONNAIRES',
+  SETTINGS_SECURITY = 'SETTINGS_SECURITY',
 }
 
 class DashboardService {
@@ -97,24 +99,42 @@ export const dashboardSvc: DashboardService = new DashboardService(Layout, [
   },
   {
     id: Dashboards.EDIT,
-    title: 'Edit',
+    title: 'Bewerken',
     icon: 'edit',
     route: '/edit',
     visible: false,
     component: EditForm,
   },
   {
-    id: Dashboards.SETTINGS,
-    title: 'Settings',
-    icon: 'settings',
-    route: '/settings',
+    id: Dashboards.SETTINGS_ORGANISATIONS,
+    title: 'Organisaties',
+    icon: 'people',
+    route: '/settings/organisations',
     visible: true,
     forRoles: ['admin'],
-    component: EditSettings,
+    component: EditOrganisation,
+  },
+  {
+    id: Dashboards.SETTINGS_QUESTIONNAIRES,
+    title: 'Vragenlijsten',
+    icon: 'assessment',
+    route: '/settings/questionnaires',
+    visible: true,
+    forRoles: ['admin'],
+    component: EditQuestionnaire,
+  },
+  {
+    id: Dashboards.SETTINGS_SECURITY,
+    title: 'Beveiliging',
+    icon: 'security',
+    route: '/settings/security',
+    visible: true,
+    forRoles: ['admin'],
+    component: EditSecurity,
   },
   {
     id: Dashboards.USER,
-    title: 'User page',
+    title: 'Gebruiker',
     route: '/user',
     icon: () => (Auth.isAuthenticated ? 'person' : 'person_outline'),
     visible: true,

@@ -43,8 +43,6 @@ export const appStateMgmt = {
 export interface IAppModel {
   app: {
     filter: string;
-    questionnaires: IQuestionnaire[];
-    organisations: IOrganisation[];
     settings: IAppSettings;
   };
 }
