@@ -1,3 +1,5 @@
+import { saveAs } from 'file-saver';
+
 /**
  * Create a GUID
  * @see https://stackoverflow.com/a/2117523/319711
@@ -5,7 +7,7 @@
  * @returns RFC4122 version 4 compliant GUID
  */
 export const uuid4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     // tslint:disable-next-line:no-bitwise
     const r = (Math.random() * 16) | 0;
     // tslint:disable-next-line:no-bitwise
@@ -21,7 +23,7 @@ export const uuid4 = () => {
  * @returns RFC4122 version 4 compliant GUID
  */
 export const uniqueId = () => {
-  return 'idxxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, c => {
+  return 'idxxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     // tslint:disable-next-line:no-bitwise
     const r = (Math.random() * 16) | 0;
     // tslint:disable-next-line:no-bitwise
@@ -67,14 +69,14 @@ export const unCamelCase = (str?: string) =>
     ? str
         .replace(/([a-z])([A-Z])/g, '$1 $2') // insert a space between lower & upper
         .replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3') // space before last upper in a sequence followed by lower
-        .replace(/^./, char => char.toUpperCase()) // uppercase the first character
+        .replace(/^./, (char) => char.toUpperCase()) // uppercase the first character
     : '';
 
 export const deepEqual = <T extends { [key: string]: any }>(x?: T, y?: T): boolean => {
   const tx = typeof x;
   const ty = typeof y;
   return x && y && tx === 'object' && tx === ty
-    ? Object.keys(x).length === Object.keys(y).length && Object.keys(x).every(key => deepEqual(x[key], y[key]))
+    ? Object.keys(x).length === Object.keys(y).length && Object.keys(x).every((key) => deepEqual(x[key], y[key]))
     : x === y;
 };
 
@@ -92,7 +94,7 @@ export const formatOptional = (
   ...items: Array<string | number | undefined>
 ) => {
   const { brackets, prepend = '', append = '' } = options;
-  const f = items.filter(i => typeof i !== 'undefined' && i !== '');
+  const f = items.filter((i) => typeof i !== 'undefined' && i !== '');
   if (!f || f.length === 0) {
     return '';
   }
@@ -147,4 +149,50 @@ export const range = (from: number, to: number, step: number = 1) => {
     arr.push(i);
   }
   return arr;
+};
+
+export const formatDate = (t: number) => {
+  const date = new Date(t);
+  const pl = (n: number) => padLeft(n, '0');
+  return `${date.getFullYear()}-${pl(date.getMonth() + 1)}-${pl(date.getDate())} ${pl(date.getHours())}:${pl(
+    date.getMinutes()
+  )}`;
+};
+
+/** Create a filename for the CSV */
+const csvFilename = (name = '') => {
+  const now = new Date();
+  return `${now.getFullYear()}${padLeft(now.getMonth() + 1, '0')}${padLeft(now.getDate(), '0')}${
+    name ? `_${name}` : ''
+  }.csv`;
+};
+
+const objToCsv = (data: Array<{ [key: string]: any }> | { [key: string]: any }) => {
+  const d = data instanceof Array ? data : [data];
+  const headers = [] as string[];
+  const csv = d.reduce((acc, cur) => {
+    const row = Object.keys(cur)
+      .reduce((a, c) => {
+        if (headers.indexOf(c) <= 0) {
+          headers.push(c);
+        }
+        a.push(JSON.stringify(cur[c]));
+        return a;
+      }, [] as string[])
+      .join(';');
+    acc.push(row);
+    return acc;
+  }, [] as string[]) as string[];
+  csv.unshift(headers.join(';'));
+  return csv.join('\r\n');
+};
+
+export const saveCsv = (data: Array<{ [key: string]: any }> | { [key: string]: any }, name?: string) => {
+  const csv = objToCsv(data);
+  const blob = new Blob([csv], {
+    type: 'text/plain;charset=utf-8',
+  });
+  saveAs(blob, csvFilename(name), {
+    autoBom: true,
+  });
 };

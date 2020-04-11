@@ -1,22 +1,13 @@
 import m, { FactoryComponent } from 'mithril';
-import { Collection, CollectionMode, FlatButton } from 'mithril-materialized';
+import { FlatButton } from 'mithril-materialized';
 import { Form, LayoutForm } from 'mithril-ui-form';
-import { IDatum } from '../../../../shared/dist/models/datum';
-import { IQuestionnaire } from '../../../../shared/src';
+import { IDatum, IQuestionnaire } from '../../../../shared/src';
 import { AppState } from '../../models/app-state';
 import { crudServiceFactory, ICrudService } from '../../services/crud-service';
 import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
 import { IActions, IAppModel } from '../../services/meiosis';
-import { padLeft } from '../../utils';
+import { formatDate } from '../../utils';
 import { CircularSpinner } from '../ui/preloader';
-
-const formatDate = (t: number) => {
-  const date = new Date(t);
-  const pl = (n: number) => padLeft(n, '0');
-  return `${date.getFullYear()}-${pl(date.getMonth() + 1)}-${pl(date.getDate())} ${pl(date.getHours())}:${pl(
-    date.getMinutes()
-  )}`;
-};
 
 const maxEditTime = 24 * 3600000;
 export const EditForm: FactoryComponent<{
@@ -45,7 +36,7 @@ export const EditForm: FactoryComponent<{
         M.toast({ html: 'ID en/of organisatie is niet aangegeven.', classes: 'red' });
         return m.route.set(dashboardSvc.route(Dashboards.HOME));
       }
-      state.questionnaire = questionnaires?.filter(s => s.id === id).shift();
+      state.questionnaire = questionnaires?.filter((s) => s.id === id).shift();
       if (!state.questionnaire) {
         M.toast({ html: 'De vragenlijst is onbekend.', classes: 'red' });
         return m.route.set(dashboardSvc.route(Dashboards.HOME));
@@ -67,7 +58,7 @@ export const EditForm: FactoryComponent<{
       if (!id || !org || !questionnaire) {
         return m(CircularSpinner);
       }
-      const organisation = organisations?.filter(o => o.id === org).shift();
+      const organisation = organisations?.filter((o) => o.id === org).shift();
 
       const now = Date.now();
       const readonly = !datum || (datum.meta && datum.meta.created ? now - datum.meta.created > maxEditTime : false);
@@ -81,9 +72,9 @@ export const EditForm: FactoryComponent<{
 
       return m('.row', [
         m(
-          'ul#slide-out.sidenav.sidenav-fixed',
+          'ul#slide-right.sidenav.sidenav-fixed.right',
           {
-            style: `height: ${window.innerHeight - 30}px`,
+            // style: `height: ${window.innerHeight - 30}px`,
             oncreate: ({ dom }) => {
               M.Sidenav.init(dom);
             },
@@ -97,7 +88,7 @@ export const EditForm: FactoryComponent<{
               onclick: () => (state.datum = { org } as IDatum),
             }),
             data &&
-              data.map(d =>
+              data.map((d) =>
                 m(
                   'li',
                   m(
@@ -125,7 +116,7 @@ export const EditForm: FactoryComponent<{
                     form,
                     obj: datum,
                     readonly,
-                    onchange: async _ => {
+                    onchange: async (_) => {
                       console.log(datum);
                     },
                   })

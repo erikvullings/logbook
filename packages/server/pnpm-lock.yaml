@@ -6,7 +6,7 @@ devDependencies:
   '@types/koa-compose': 3.2.5
   '@types/koa-router': 7.4.0
   '@types/koa-static': 4.0.1
-  '@types/node': 12.12.34
+  '@types/node': 12.12.35
   rimraf: 3.0.2
   tsc-watch: 4.2.3_typescript@3.8.3
   typescript: 3.8.3
@@ -22,29 +22,29 @@ packages:
       integrity: sha512-hDp+cXj6vTYSwHRJfiSpnf5dTMv3FmqNKh1or9BPJk4SHOviHnK9GoL9dT0ypt/E+hlkRkZ9edHylcosW3Ghrw==
   /@types/accepts/1.3.5:
     dependencies:
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
     dev: true
     resolution:
       integrity: sha512-jOdnI/3qTpHABjM5cx1Hc0sKsPoYCp+DP/GJRGtDlPd7fiV9oXGGIcjW/ZOxLIvjGz8MA+uMZI9metHlgqbgwQ==
   /@types/body-parser/1.19.0:
     dependencies:
       '@types/connect': 3.4.33
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
     dev: true
     resolution:
       integrity: sha512-W98JrE0j2K78swW4ukqMleo8R7h/pFETjM2DQ90MF6XK2i4LO4W3gQ71Lt4w3bfm2EvVSyWHplECvB5sK22yFQ==
   /@types/connect/3.4.33:
     dependencies:
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
     dev: true
     resolution:
       integrity: sha512-2+FrkXY4zllzTNfJth7jOqEHC+enpLeGslEhpnTAkg21GkRrWV4SsAtqchtT4YS9/nODBU2/ZfsBY2X4J/dX7A==
   /@types/cookies/0.7.4:
     dependencies:
       '@types/connect': 3.4.33
-      '@types/express': 4.17.4
+      '@types/express': 4.17.5
       '@types/keygrip': 1.0.2
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
     dev: true
     resolution:
       integrity: sha512-oTGtMzZZAVuEjTwCjIh8T8FrC8n/uwy+PG0yTvQcdZ7etoel7C7/3MSd7qrukENTgQtotG7gvBlBojuVs7X5rw==
@@ -52,26 +52,26 @@ packages:
     dev: false
     resolution:
       integrity: sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
-  /@types/express-serve-static-core/4.17.3:
+  /@types/express-serve-static-core/4.17.4:
     dependencies:
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
       '@types/range-parser': 1.2.3
     dev: true
     resolution:
-      integrity: sha512-sHEsvEzjqN+zLbqP+8OXTipc10yH1QLR+hnr5uw29gi9AhCAAAdri8ClNV7iMdrJrIzXIQtlkPvq8tJGhj3QJQ==
-  /@types/express/4.17.4:
+      integrity: sha512-dPs6CaRWxsfHbYDVU51VjEJaUJEcli4UI0fFMT4oWmgCvHj+j7oIxz5MLHVL0Rv++N004c21ylJNdWQvPkkb5w==
+  /@types/express/4.17.5:
     dependencies:
       '@types/body-parser': 1.19.0
-      '@types/express-serve-static-core': 4.17.3
+      '@types/express-serve-static-core': 4.17.4
       '@types/qs': 6.9.1
       '@types/serve-static': 1.13.3
     dev: true
     resolution:
-      integrity: sha512-DO1L53rGqIDUEvOjJKmbMEQ5Z+BM2cIEPy/eV3En+s166Gz+FeuzRerxcab757u/U4v4XF4RYrZPmqKa+aY/2w==
+      integrity: sha512-u4Si7vYAjy5/UyRFa8EoqLHh6r82xOZPbWRQHlSf6alob0rlyza7EkU0RbR8kOZqgWp6R5+aRcHMYYby7w12Bg==
   /@types/formidable/1.0.31:
     dependencies:
       '@types/events': 3.0.0
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
     dev: false
     resolution:
       integrity: sha512-dIhM5t8lRP0oWe2HF8MuPvdd1TpPTjhDMAqemcq6oIZQCBQTovhBAdTQ5L5veJB4pdQChadmHuxtB0YzqvfU3Q==
@@ -115,7 +115,7 @@ packages:
       '@types/http-assert': 1.5.1
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
-      '@types/node': 12.12.34
+      '@types/node': 12.12.35
     dev: true
     resolution:
       integrity: sha512-cp/GTOhOYwomlSKqEoG0kaVEVJEzP4ojYmfa7EKaGkmkkRwJ4B/1VBLbQZ49Z+WJNvzXejQB/9GIKqMo9XLgFQ==
@@ -123,9 +123,9 @@ packages:
     dev: true
     resolution:
       integrity: sha512-FwI9gX75FgVBJ7ywgnq/P7tw+/o1GUbtP0KzbtusLigAOgIgNISRK0ZPl4qertvXSIE8YbsVJueQ90cDt9YYyw==
-  /@types/node/12.12.34:
+  /@types/node/12.12.35:
     resolution:
-      integrity: sha512-BneGN0J9ke24lBRn44hVHNeDlrXRYF+VRp0HbSUNnEZahXGAysHZIqnf/hER6aabdBgzM4YOV4jrR8gj4Zfi0g==
+      integrity: sha512-ASYsaKecA7TUsDrqIGPNk3JeEox0z/0XR/WsJJ8BIX/9+SkMSImQXKWfU/yBrSyc7ZSE/NPqLu36Nur0miCFfQ==
   /@types/qs/6.9.1:
     dev: true
     resolution:
@@ -136,7 +136,7 @@ packages:
       integrity: sha512-ewFXqrQHlFsgc09MK5jP5iR7vumV/BYayNC6PgJO2LPe8vrnNFyjQjSppfEngITi0qvfKtzFvgKymGheFM9UOA==
   /@types/serve-static/1.13.3:
     dependencies:
-      '@types/express-serve-static-core': 4.17.3
+      '@types/express-serve-static-core': 4.17.4
       '@types/mime': 2.0.1
     dev: true
     resolution:
@@ -1005,7 +1005,7 @@ specifiers:
   '@types/koa-compose': ^3.2.5
   '@types/koa-router': ^7.4.0
   '@types/koa-static': ^4.0.1
-  '@types/node': ^12.12.34
+  '@types/node': ^12.12.35
   dotenv: ^8.2.0
   rest-easy-loki: ^0.6.0
   rimraf: ^3.0.2

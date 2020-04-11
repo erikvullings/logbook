@@ -17,6 +17,7 @@ footer {
 }
 
 /* Set theme color */
+nav,
 .btn,
 .btn-floating,
 .page-footer,
@@ -31,14 +32,15 @@ footer {
 .input-field > .material-icons,
 .dropdown-content > li > a,
 .secondary-content > .material-icons {
-  color: #1a237e;
+  /* color: #1a237e; */
   font-weight: bold;
 }
 .markdown.normalized a {
-  font-weight: bold;
+  /* font-weight: bold; */
   text-decoration: underline;
 }
 .markdown.normalized {
+  margin-top: -14px;
   font-weight: normal;
 }
 
@@ -104,7 +106,7 @@ a,
   padding: 0 20px;
 }
 .contentarea {
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 }
 #search:not(:focus) {
   color: white;
@@ -198,6 +200,10 @@ ul.nowrap > li .wrap span {
 li.clickable {
   cursor: pointer;
   color: #1a237e;
+}
+
+li.child-link {
+  margin-left: 50px;
 }
 
 .repeat-list .repeat-list .row {

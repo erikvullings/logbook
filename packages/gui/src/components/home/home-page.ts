@@ -1,5 +1,5 @@
 import m, { FactoryComponent } from 'mithril';
-import { Collection, CollectionMode, TextInput } from 'mithril-materialized';
+import { Collection, CollectionMode } from 'mithril-materialized';
 import { IQuestionnaire } from '../../../../shared/src';
 import { Dashboards, dashboardSvc } from '../../services/dashboard-service';
 import { Auth } from '../../services/login-service';
@@ -22,17 +22,17 @@ export const HomePage: FactoryComponent<{
         return m(CircularSpinner);
       }
 
-      const organisation = (orgId: string) => organisations?.filter(o => o.id === orgId).shift();
+      const organisation = (orgId: string) => organisations?.filter((o) => o.id === orgId).shift();
       const org2questionnaire = (Auth.roles || []).reduce((acc, role) => {
-        acc[role] = questionnaires.filter(q => q.organisations.indexOf(role) >= 0);
+        acc[role] = questionnaires.filter((q) => q.organisations.indexOf(role) >= 0);
         return acc;
       }, {} as { [role: string]: IQuestionnaire[] });
       // questionnaires.filter(s => Auth.matchRoles(s.organisations));
       return m('.row', [
         m('.contentarea', [
           Object.keys(org2questionnaire)
-            .filter(org => org2questionnaire[org].length > 0)
-            .map(org =>
+            .filter((org) => org2questionnaire[org].length > 0)
+            .map((org) =>
               m(
                 '.row',
                 m(Collection, {
@@ -40,13 +40,13 @@ export const HomePage: FactoryComponent<{
                   header: `Vragenlijsten voor ${organisation(org)?.name}`,
                   items: org2questionnaire[org]
                     .filter(
-                      s =>
+                      (s) =>
                         !filter ||
                         (s.name && s.name.toLowerCase().indexOf(filter) >= 0) ||
                         (s.tags &&
                           s.tags.reduce((acc, cur) => acc || cur.toLowerCase().indexOf(filter) >= 0, false as boolean))
                     )
-                    .map(s => ({
+                    .map((s) => ({
                       id: s.id,
                       title: s.name,
                       content: s.tags ? s.tags.join(', ') : undefined,

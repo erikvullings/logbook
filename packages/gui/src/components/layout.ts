@@ -1,17 +1,23 @@
-import m, { Vnode } from 'mithril';
+import m, { FactoryComponent } from 'mithril';
 import { Icon } from 'mithril-materialized';
 import logo from '../assets/logbook - black.svg';
 import { IDashboard } from '../models';
+import { IAppModel } from '../services';
 import { dashboardSvc } from '../services/dashboard-service';
 
 const stripRouteParams = (path: string) => path.replace(/:[a-zA-Z]+/, '');
 
-const isActiveRoute = (route = m.route.get()) => (path: string) =>
-  path.length > 1 && route.indexOf(stripRouteParams(path)) >= 0 ? '.active' : '';
+const isRouteActive = (route = m.route.get()) => (path?: string) =>
+  path && path.length > 1 && route.indexOf(stripRouteParams(path)) >= 0 ? '.active' : '';
 
-export const Layout = () => ({
-  view: (vnode: Vnode) => {
-    const isActive = isActiveRoute();
+const isRouteVisible = (d: IDashboard, app?: IAppModel) =>
+  typeof d.visible === 'boolean' ? d.visible : typeof d.visible === 'function' ? d.visible(app) : false;
+
+export const Layout: FactoryComponent<{
+  state: IAppModel;
+}> = () => ({
+  view: ({ children, attrs: { state } }) => {
+    const isActive = isRouteActive();
     return [
       m(
         // 'a.sidenav-trigger[href=#!/home][data-target=slide-out]',
@@ -45,11 +51,11 @@ export const Layout = () => ({
           ),
           ...dashboardSvc
             .getList()
-            .filter(d => d.visible || isActive(d.route))
+            .filter((d) => isRouteVisible(d, state) || isActive(d.route))
             .map((d: IDashboard) =>
               m(
-                `li${isActive(d.route)}`,
-                m(m.route.Link, { href: d.route }, [
+                `li${isActive(d.route)}${d.isChild ? '.child-link' : ''}`,
+                m(m.route.Link, { href: d.route || dashboardSvc.defaultRoute }, [
                   d.icon && m('i.material-icons', typeof d.icon === 'string' ? d.icon : d.icon()),
                   m('span', d.title),
                 ])
@@ -57,77 +63,7 @@ export const Layout = () => ({
             ),
         ]
       ),
-      m('main', m('.contentarea', vnode.children)),
+      m('main', m('.contentarea', children)),
     ];
-    // return [
-    //   m(
-    //     'header',
-    //     m(
-    //       '.navbar-fixed',
-    //       { style: 'height: 80px;' },
-    //       // { style: 'z-index: 1001' },
-    //       m(
-    //         'nav',
-    //         m('.nav-wrapper', [
-    //           m('a.brand-logo[href=#]', [
-    //             m(`img[width=100][height=45][src=${logo}]`, {
-    //               style: 'margin: 7px 0 0 5px;',
-    //             }),
-    //             m(
-    //               'div',
-    //               {
-    //                 style: 'margin-top: 0px; position: absolute; top: 16px; left: 50px; width: 400px;',
-    //               },
-    //               m(
-    //                 'h4.center.hide-on-med-and-down',
-    //                 {
-    //                   style: 'text-align: left; margin: -7px 0 0 60px; background: #01689B',
-    //                 },
-    //                 'Logbook'
-    //               )
-    //             ),
-    //           ]),
-    //           m(
-    //             // 'a.sidenav-trigger[href=#!/home][data-target=slide-out]',
-    //             // { onclick: (e: UIEvent) => e.preventDefault() },
-    //             m.route.Link,
-    //             {
-    //               className: 'sidenav-trigger',
-    //               'data-target': 'slide-out',
-    //               href: m.route.get(),
-    //             },
-    //             m(Icon, {
-    //               iconName: 'menu',
-    //               className: '.hide-on-med-and-up',
-    //               style: 'margin-left: 5px;',
-    //             })
-    //           ),
-    //           m(
-    //             'ul.right',
-    //             dashboardSvc
-    //               .getList()
-    //               .filter(d => d.visible || isActive(d.route))
-    //               .map((d: IDashboard) =>
-    //                 m(
-    //                   `li${isActive(d.route)}`,
-    //                   m(
-    //                     m.route.Link,
-    //                     { href: d.route },
-    //                     m(
-    //                       'span',
-    //                       d.icon
-    //                         ? m('i.material-icons.white-text', typeof d.icon === 'string' ? d.icon : d.icon())
-    //                         : d.title
-    //                     )
-    //                   )
-    //                 )
-    //               )
-    //           ),
-    //         ])
-    //       )
-    //     )
-    //   ),
-    //   m('.main', vnode.children),
-    // ];
   },
 });
