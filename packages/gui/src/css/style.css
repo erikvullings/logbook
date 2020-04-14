@@ -51,7 +51,10 @@ nav ul a {
 }
 a,
 .primary-text {
-  color: #1a237e;
+  color: black;
+}
+.brand-logo {
+  font-weight: bold;
 }
 .markdown ul {
   padding-left: 20px;

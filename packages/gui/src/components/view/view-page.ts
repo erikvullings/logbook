@@ -1,21 +1,17 @@
 import m, { FactoryComponent } from 'mithril';
+import { FlatButton } from 'mithril-materialized';
 import { Form, LayoutForm } from 'mithril-ui-form';
-import { ILokiObj, IOrganisation, IQuestionnaire } from '../../../../shared/src';
-import { AppState, SecurityMode } from '../../models';
+import { IOrganisation, IQuestionnaire } from '../../../../shared/src';
+import { AppState, ILokiObjExt, SecurityMode } from '../../models';
 import { crudServiceFactory } from '../../services/crud-service';
 import { IActions, IAppModel } from '../../services/meiosis';
 import { formatDate, saveCsv } from '../../utils';
 import { CircularSpinner } from '../ui/preloader';
-import { FlatButton } from 'mithril-materialized';
 
 export const ViewPage: FactoryComponent<{
   state: IAppModel;
   actions: IActions;
 }> = () => {
-  interface ILokiObjExt extends ILokiObj {
-    org: string;
-  }
-
   const sources = {} as { [questionnaireId: string]: ILokiObjExt[] };
   const data = {} as { [questionnaireId: string]: { [$loki: string]: ILokiObjExt | undefined } };
 
@@ -34,14 +30,14 @@ export const ViewPage: FactoryComponent<{
     return [
       {
         id: 'questionnaire',
-        label: 'Kies een vragenlijst',
+        label: 'Kies vragenlijst',
         type: 'select',
         options: questionnaires.map((q) => ({ id: q.id, label: q.name })),
         className: 'col s12 m4',
       },
       {
         id: 'organisation',
-        label: 'Kies een organisatie',
+        label: 'Kies organisatie',
         type: 'select',
         disabled: !obj.questionnaire,
         options: orgs.map((o) => ({ id: o.id, label: o.name })),
@@ -49,7 +45,7 @@ export const ViewPage: FactoryComponent<{
       },
       {
         id: '$loki',
-        label: 'Kies een tijdstip',
+        label: 'Kies tijdstip',
         type: 'select',
         disabled: !obj.organisation || !obj.questionnaire || !sources[obj.questionnaire],
         options: orgTimestamps.map((s) => ({ id: s.$loki, label: formatDate(s.meta.updated || s.meta.created) })),
@@ -83,7 +79,7 @@ export const ViewPage: FactoryComponent<{
       return m('.row', [
         m('.contentarea', [
           m(
-            '.row',
+            '.row.select-questionnaire-organisation',
             m(LayoutForm, {
               key,
               form,
@@ -103,12 +99,15 @@ export const ViewPage: FactoryComponent<{
                   }
                 }
                 if (obj.$loki) {
+                  if (!data[q]) {
+                    data[q] = {};
+                  }
                   data[q][obj.$loki] = await service.load(obj.$loki);
                 }
               },
             })
           ),
-          m('.row', [
+          m('.row.downloads', [
             id &&
               m(FlatButton, {
                 iconName: 'cloud_download',
@@ -146,15 +145,17 @@ export const ViewPage: FactoryComponent<{
               }),
           ]),
           qData &&
-            qForm &&
-            m(
-              '.row',
-              m(LayoutForm, {
-                form: qForm,
-                obj: qData,
-                readonly: true,
-              })
-            ),
+            qForm && [
+              m('.divider'),
+              m(
+                '.row.view-form',
+                m(LayoutForm, {
+                  form: qForm,
+                  obj: qData,
+                  readonly: true,
+                })
+              ),
+            ],
         ]),
       ]);
     },

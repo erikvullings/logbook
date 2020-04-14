@@ -4,7 +4,7 @@ import { ILokiObj } from '../../../shared/src';
 export interface ICrudService<T> {
   load: (id?: string | number) => Promise<T | undefined>;
   loadAll: (filter?: string) => Promise<T[] | undefined>;
-  create: (item: T, fd?: FormData | undefined) => Promise<T | undefined>;
+  create: (item: Partial<T>, fd?: FormData | undefined) => Promise<T | undefined>;
   update: (item: T, fd?: FormData | undefined) => Promise<T | undefined>;
   delete: (id: string | number) => Promise<undefined>;
   save: (item: T, fd?: FormData | undefined) => Promise<T | undefined>;
@@ -20,7 +20,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string,
         method: 'GET',
         url: urlId,
       })
-      .catch(e => {
+      .catch((e) => {
         console.warn(e);
         return undefined;
       });
@@ -33,7 +33,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string,
         method: 'GET',
         url: filter ? `${url}/${filter}` : url,
       })
-      .catch(e => console.error(e));
+      .catch((e) => console.error(e));
     if (!result) {
       console.warn('No result found at ' + url);
       return [];
@@ -41,14 +41,14 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string,
     return result;
   };
 
-  const create = async (item: T, fd?: FormData) => {
+  const create = async (item: Partial<T>, fd?: FormData) => {
     const result = await m
       .request<T>({
         method: 'POST',
         url,
         body: fd || item,
       })
-      .catch(e => console.error(e));
+      .catch((e) => console.error(e));
     return result;
   };
 
@@ -60,7 +60,7 @@ export const crudServiceFactory = <T extends Partial<ILokiObj>>(baseUrl: string,
         url: urlId,
         body: fd || item,
       })
-      .catch(e => console.error(e));
+      .catch((e) => console.error(e));
     return result;
   };
 
