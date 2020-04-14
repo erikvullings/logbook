@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "pnpm recursive run cleanup",
     "start": "pnpm recursive run dev",
-    "build:domain": "pnpm run build:domain",
+    "build": "pnpm recursive run build:domain",
     "docker:build": "docker build -t logbook .",
     "docker:tag": "docker tag logbook minvws/logbook",
     "docker:publish": "docker push minvws/logbook",
